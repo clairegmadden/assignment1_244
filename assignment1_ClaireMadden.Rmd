@@ -45,7 +45,6 @@ hares_mf <- hares %>%
   mutate(date = mdy(date)) %>% # change date format
   mutate(full_date = date) %>% # retain date column
   separate(date, into = c("year", "month", "day")) %>% #create new columns with parsed date info
-  mutate(month = as.numeric(month)) %>% # change class of month column
   mutate(season = ifelse(month %in% c(1:4, 11, 12), "winter", "summer")) # organize months into "summer" and "winter"
   
 # seems like there are a lot more observations in the summer than in the winter so maybe not an interesting thing to use for visualization
@@ -58,8 +57,8 @@ hares_mf <- hares %>%
 
 # graph
 
-hares_plot <- ggplot(data = hares_mf, aes(x = weight))+
-  geom_histogram()+
+hares_plot <- ggplot(data = hares_mf, aes(x = weight, y = hindft))+
+  geom_point()+
   facet_wrap(~sex)
 
 hares_plot
@@ -113,7 +112,7 @@ env_pca <- prcomp(env_nona, scale = TRUE) # run PCA
 plot(env_pca)
 biplot(env_pca) # lookin real UGLY! 
 
-
+# a prettier version...
 my_pca_plot <- autoplot(env_pca,
                         colour = NA,
                         loadings.colour = "black",
