@@ -37,34 +37,87 @@ library(janitor)
 library(lubridate)
 library(tidyr)
 library(ggfortify)
+library(RColorBrewer)
 
 hares<- read_csv("showshoe_lter.csv") 
 
 hares_mf <- hares %>% 
-  filter(sex == "M" | sex == "F") %>% # remove all observations with NA in sex
+  mutate(sex = str_to_lower(sex)) %>% # change all entries in sex column to lower case
+  filter(sex == "m" | sex == "f") %>% # remove all observations with NA or ? in sex
   mutate(date = mdy(date)) %>% # change date format
   mutate(full_date = date) %>% # retain date column
   separate(date, into = c("year", "month", "day")) %>% #create new columns with parsed date info
-  mutate(season = ifelse(month %in% c(1:4, 11, 12), "winter", "summer")) # organize months into "summer" and "winter"
+  mutate(month = as.numeric(month)) %>% 
+  mutate(season = ifelse(month %in% c(1:4, 11, 12), "winter", "summer")) %>% # organize months into "summer" and "winter"
+  mutate(year = as.numeric(year))
   
 # seems like there are a lot more observations in the summer than in the winter so maybe not an interesting thing to use for visualization
 
+
+# explore graph
+ggplot(data = hares_mf, aes(x = weight, y = hindft))+
+  geom_point()+
+  facet_wrap(~sex)
+
+
+# this is not that interesting to me
 
 
 ```
 
 ```{r}
 
-# graph
+# try something else that may be more interesting
 
-hares_plot <- ggplot(data = hares_mf, aes(x = weight, y = hindft))+
-  geom_point()+
-  facet_wrap(~sex)
+hares_hist <- ggplot(data = hares_mf, aes(x = year))+
+  geom_bar(aes(fill = sex), position = "dodge")+
+  scale_fill_manual(values = c("peru", "peachpuff2"), labels = c("Female", "Male"))+
+  scale_x_continuous(expand = c(0,0),
+                     breaks = seq(1998, 2012, 1))+
+  theme_minimal()+
+  labs(x = "Year of Observation",
+       y = "Observation Count", 
+       title = "Snowshoe Hare Monitoring Observations in the Bonanza Creek \nExperimental Forest Between 1998 - 2012")+
+  theme(legend.title = element_blank())
 
-hares_plot
+
+hares_hist
+
 
 ```
 
+```{r}
+
+# make a summary table for females
+hare_summary_f <- hares_mf %>% 
+  filter(sex == "f") %>% 
+  drop_na(weight, hindft) %>% # take out an values to be able to calculate mean
+  group_by(year) %>% # organize by year and sex
+  summarize(
+    count = length(sex), # number of observations
+    avg_weight = round(mean(weight), digits = 0))# mean weight
+    
+# make a summary table for males
+hare_summary_m <- hares_mf %>% 
+  filter(sex == "m") %>% 
+  drop_na(weight, hindft) %>% # take out an values to be able to calculate mean
+  group_by(year) %>% # organize by year and sex
+  summarize(
+    count = length(sex), # number of observations
+    avg_weight = round(mean(weight), digits = 0)) # mean weight
+
+
+# combine the two tables!
+hare_summary <- merge(hare_summary_f, hare_summary_m, by = "year")
+
+# format into a single pretty table
+hare_table <- kable(hare_summary, align = "c", col.names = c("Year", "Count", "Average Weight", "Count", "Average Weight"), caption = "Table 1. Sumamry Statistics for Snowshoe Hare Monitoring at Bonanza Creek Experimental Forest Between 1998 - 2012") %>% 
+  add_header_above(c(" " = 1, "Female" = 2, "Male" = 2)) %>% 
+  kable_styling(bootstrap_options = c("striped"), full_width = FALSE)
+
+hare_table
+
+```
 
 
 
