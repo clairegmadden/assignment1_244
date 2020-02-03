@@ -111,7 +111,7 @@ hare_summary_m <- hares_mf %>%
 hare_summary <- merge(hare_summary_f, hare_summary_m, by = "year")
 
 # format into a single pretty table
-hare_table <- kable(hare_summary, align = "c", col.names = c("Year", "Count", "Average Weight", "Count", "Average Weight"), caption = "Table 1. Sumamry Statistics for Snowshoe Hare Monitoring at Bonanza Creek Experimental Forest Between 1998 - 2012") %>% 
+hare_table <- kable(hare_summary, align = "c", col.names = c("Year", "Count", "Average Weight", "Count", "Average Weight"), caption = "Table 1. Sumamry Statistics for Snowshoe Hare Monitoring at Bonanza Creek Experimental Forest Between 1998 - 2012.") %>% 
   add_header_above(c(" " = 1, "Female" = 2, "Male" = 2)) %>% 
   kable_styling(bootstrap_options = c("striped"), full_width = FALSE)
 
