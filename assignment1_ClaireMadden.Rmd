@@ -1,8 +1,10 @@
 ---
 title: "Assignment 1 - ESM 244"
 author: "Claire Madden"
-date: "1/26/2020"
-output: html_document
+date: "2/6/2020"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -11,16 +13,23 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 ```
 
-## Task 1. 
-
-snowshoe hare data : Kielland K., F. S. Chapin, R. W. Ruess. 2017. Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present. Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14.  
+### Task 1. 
+ 
 
 
 Prepare a single polished HTML (knitted from .Rmd), planning that this might be a post/project you’d include on your personal blogdown site, that includes at least:
 
 A useful descriptive introductory summary (3 - 4 sentences) of what’s contained in the project
-Image(s), with captions and necessary citation(s), of showshoe hares and/or a map of the study area
+
+
+
+
+![Image source: National Geographic](81736.jpg)
+
+
 All of your organized and well-annotated code (with warnings/messages hidden) used to create at least:
+
+
 
 One finalized graph about the Bonanza Creek snowshoe hare population (you pick which variables, how you want to wrangle it beforehand, and which type of visual to create - but make sure it is beautifully finalized)
 
@@ -53,12 +62,10 @@ hares_mf <- hares %>%
   
 # seems like there are a lot more observations in the summer than in the winter so maybe not an interesting thing to use for visualization
 
-
 # explore graph
 ggplot(data = hares_mf, aes(x = weight, y = hindft))+
   geom_point()+
   facet_wrap(~sex)
-
 
 # this is not that interesting to me
 
@@ -76,15 +83,20 @@ hares_hist <- ggplot(data = hares_mf, aes(x = year))+
                      breaks = seq(1998, 2012, 1))+
   theme_minimal()+
   labs(x = "Year of Observation",
-       y = "Observation Count", 
-       title = "Snowshoe Hare Monitoring Observations in the Bonanza Creek \nExperimental Forest Between 1998 - 2012")+
+       y = "Observation Count")+
   theme(legend.title = element_blank())
-
 
 hares_hist
 
 
 ```
+        
+**Figure 1. Snowshoe Hare Monitoring Observations in the Bonanza Creek Experimental Forest Between 1998 - 2012.**        
+Total number of observations of female and male snowshoe hares are recorded each year during the monitoring period. 
+Data source: Kielland K., F. S. Chapin, R. W. Ruess. 2017.
+
+
+
 
 ```{r}
 
@@ -106,12 +118,11 @@ hare_summary_m <- hares_mf %>%
     count = length(sex), # number of observations
     avg_weight = round(mean(weight), digits = 0)) # mean weight
 
-
 # combine the two tables!
 hare_summary <- merge(hare_summary_f, hare_summary_m, by = "year")
 
 # format into a single pretty table
-hare_table <- kable(hare_summary, align = "c", col.names = c("Year", "Count", "Average Weight", "Count", "Average Weight"), caption = "Table 1. Sumamry Statistics for Snowshoe Hare Monitoring at Bonanza Creek Experimental Forest Between 1998 - 2012.") %>% 
+hare_table <- kable(hare_summary, align = "c", col.names = c("Year", "Count", "Average Weight", "Count", "Average Weight"), caption = "Table 1. Sumamry Statistics for Snowshoe Hare Monitoring Observations at Bonanza Creek Experimental Forest Between 1998 - 2012. Annual observation counts and average weight of female and male snowshoe hares are reported for each of the years during the monitoring period") %>% 
   add_header_above(c(" " = 1, "Female" = 2, "Male" = 2)) %>% 
   kable_styling(bootstrap_options = c("striped"), full_width = FALSE)
 
@@ -119,24 +130,25 @@ hare_table
 
 ```
 
+Data source: Kielland K., F. S. Chapin, R. W. Ruess. 2017. Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present. Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14. 
 
 
 
 
+### Task 2. 
 
-## Task 2. 
+This dataset, compiled and provided by @zander_venter on Kaggle, is a compilation of data aquired through Google Earth Engine (https://earthengine.google.com/). The dataset uses publically available remote sensing data, where most of the data is derived by calculating the mean for each country at a scale of about 10km. In order to understand the relationship between different environmental and climatic variables included in the dataset, a principal components analysis is provided below to demonstrate directionality of the greatest source of variance within variables considered. These variables were chosen to demonstrate the relationship of variance between different climatic variables included in the dataset. 
 
-For this task, I’ll provide a couple of datasets that you *can* use for PCA exploration, but you are also welcome to find/choose a different dataset to use. You only need to use one dataset to practice running PCA, creating a biplot, and interpreting the results. Whichever dataset you choose, create a finalized HTML (knitted from .Rmd) that can be included as a project on your blogdown site including: 
-
-A useful descriptive introductory summary (3 - 4 sentences) that helps the audience understand the data (include a citation as necessary) and what you’ll be exploring
-All of your organized and well-annotated code (with warnings/messages hidden) used to wrangle then run PCA, then create a finalized PCA biplot that appears (with a caption) in your knitted HTML
-A summary (bulletpoints are fine) pointing out some major takeaways from your PCA that can be gleaned from the biplot
-You are also welcome to include a photo in the HTML to add some visual interest (not required for Task 2). 
-
-
+Takeaways from the principal components analysis:
+ - Elevation and temperature are negatively correlated
+ - Isothermality and temperature are positively correlated
+ - Mean annual rain, tree cover, and cloudiness are all positively correlated
+ - Mean annual rain, tree cover, and cloudiness are not related to elevation or temperature
+ - Principal components 1 and 2 explain 75% of variance in the data
 
 
-```{r}
+
+```{r, results = FALSE}
 # explore data
 
 world_env <- read_csv("world_env_vars.csv") %>% 
@@ -145,9 +157,15 @@ world_env <- read_csv("world_env_vars.csv") %>%
 summary(world_env) # check out the dataset
 
 
-env_subset <- world_env %>% 
-  select(Elevation, TreeCanopyCover, Isothermality, RainMeanAnnual, TempMeanAnnual, Cloudiness) # select variables of interest for principal components analysis
+```
 
+
+```{r, results = FALSE}
+# select variables of interest for principal components analysis
+env_subset <- world_env %>% 
+  select(Elevation, TreeCanopyCover, Isothermality, RainMeanAnnual, TempMeanAnnual, Cloudiness) 
+
+# explore missingness
 
 VIM::matrixplot(env_subset, sortby = "Elevation")
 # can't see variable names so not that helpful for exploration
@@ -159,12 +177,16 @@ env_nona <- env_subset %>%
   drop_na() # remove NA values
 
 
-
 env_pca <- prcomp(env_nona, scale = TRUE) # run PCA
 
 plot(env_pca)
 biplot(env_pca) # lookin real UGLY! 
 
+
+```
+
+
+```{r}
 # a prettier version...
 my_pca_plot <- autoplot(env_pca,
                         colour = NA,
@@ -173,15 +195,12 @@ my_pca_plot <- autoplot(env_pca,
                         loadings.label.size = 3,
                         loadings.label.colour = "black",
                         loadings.label.repel = TRUE)+
-  theme_minimal()
-  
-
+  theme_bw()
 
 my_pca_plot
 
 ```
 
-
-
-
-
+**Figure 2.** Principal components analysis showing the relationship between variables included in a compilation        
+of Google Earth Engine datasets.       
+Data source: @zander_venter.
