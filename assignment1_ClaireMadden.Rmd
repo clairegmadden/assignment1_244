@@ -3,7 +3,6 @@ title: "Assignment 1 - ESM 244"
 author: "Claire Madden"
 date: "2/6/2020"
 output:
-  pdf_document: default
   html_document: default
 ---
 
@@ -14,28 +13,13 @@ knitr::opts_chunk$set(echo = TRUE,
 ```
 
 ### Task 1. 
- 
-
-
-Prepare a single polished HTML (knitted from .Rmd), planning that this might be a post/project you’d include on your personal blogdown site, that includes at least:
-
-A useful descriptive introductory summary (3 - 4 sentences) of what’s contained in the project
-
-
-
 
 ![Image source: National Geographic](81736.jpg)
 
-
-All of your organized and well-annotated code (with warnings/messages hidden) used to create at least:
-
+Snowshoe hares have been identified as a 'keystone' prey species in northern boreal forests. This study, conducted in the Bonanza Creek Experimental Forest just east of Fairbanks, Alaska, tracks snowshoe hare populations to generate quantitative data that could be used to better explain vegetation and preditor responses to fluctuations in hare populations. Snowshoe hares are known to experience population fluctuations every 8-11 years, as demonstrated by fluctuations in observation counts, with a low in 2002 and a high in 2010, 8 years later (Figure 1.). 
 
 
-One finalized graph about the Bonanza Creek snowshoe hare population (you pick which variables, how you want to wrangle it beforehand, and which type of visual to create - but make sure it is beautifully finalized)
-
-One finalized HTML table (probably created using kable & kableExtra) containing summary statistics about the snowshoe hares (again, you pick which variables, and how you want to group/summarize them)
-
-Make sure that both your figure and table appear in your final knitted document, each with a useful caption. Include text associated with each to help the audience understand and interpret the results. 
+Make sure that both your figure and table appear in your final knitted document, each with a useful caption. **Include text associated with each to help the audience understand and interpret the results.**
 
 
 ```{r}
@@ -122,7 +106,7 @@ hare_summary_m <- hares_mf %>%
 hare_summary <- merge(hare_summary_f, hare_summary_m, by = "year")
 
 # format into a single pretty table
-hare_table <- kable(hare_summary, align = "c", col.names = c("Year", "Count", "Average Weight", "Count", "Average Weight"), caption = "Table 1. Sumamry Statistics for Snowshoe Hare Monitoring Observations at Bonanza Creek Experimental Forest Between 1998 - 2012. Annual observation counts and average weight of female and male snowshoe hares are reported for each of the years during the monitoring period") %>% 
+hare_table <- kable(hare_summary, align = "c", col.names = c("Year", "Count", "Average Weight (g)", "Count", "Average Weight (g)"), caption = "Table 1. Sumamry Statistics for Snowshoe Hare Monitoring Observations at Bonanza Creek Experimental Forest Between 1998 - 2012. Annual observation counts and average weight of female and male snowshoe hares are reported for each of the years during the monitoring period") %>% 
   add_header_above(c(" " = 1, "Female" = 2, "Male" = 2)) %>% 
   kable_styling(bootstrap_options = c("striped"), full_width = FALSE)
 
@@ -139,12 +123,12 @@ Data source: Kielland K., F. S. Chapin, R. W. Ruess. 2017. Snowshoe hare physica
 
 This dataset, compiled and provided by @zander_venter on Kaggle, is a compilation of data aquired through Google Earth Engine (https://earthengine.google.com/). The dataset uses publically available remote sensing data, where most of the data is derived by calculating the mean for each country at a scale of about 10km. In order to understand the relationship between different environmental and climatic variables included in the dataset, a principal components analysis is provided below to demonstrate directionality of the greatest source of variance within variables considered. These variables were chosen to demonstrate the relationship of variance between different climatic variables included in the dataset. 
 
-Takeaways from the principal components analysis:
- - Elevation and temperature are negatively correlated
- - Isothermality and temperature are positively correlated
- - Mean annual rain, tree cover, and cloudiness are all positively correlated
- - Mean annual rain, tree cover, and cloudiness are not related to elevation or temperature
- - Principal components 1 and 2 explain 75% of variance in the data
+* Takeaways from the principal components analysis:
+    + Elevation and temperature are negatively correlated
+    + Isothermality and temperature are positively correlated
+    + Mean annual rain, tree cover, and cloudiness are all positively correlated
+    + Mean annual rain, tree cover, and cloudiness are not related to elevation or temperature
+    + Principal components 1 and 2 explain 75% of variance in the data
 
 
 

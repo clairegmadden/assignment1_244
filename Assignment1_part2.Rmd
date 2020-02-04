@@ -1,0 +1,82 @@
+---
+title: "Assignment 1, Part 2 - ESM 244"
+author: "Claire Madden"
+date: "2/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This dataset, compiled and provided by @zander_venter on Kaggle, is a compilation of data aquired through Google Earth Engine (https://earthengine.google.com/). The dataset uses publically available remote sensing data, where most of the data is derived by calculating the mean for each country at a scale of about 10km. A subset of the variables included in this dataset were chosen to demonstrate the relationship of variance between different climatic variables in countries throughout the world. In order to understand the relationship between different gloabl environmental and climatic variables included in the dataset, a principal components analysis is provided below to demonstrate directionality of the greatest source of variance within variables considered. 
+
+* Takeaways from the principal components analysis:
+    + Elevation and temperature are negatively correlated
+    + Isothermality and temperature are positively correlated
+    + Mean annual rain, tree cover, and cloudiness are all positively correlated
+    + Mean annual rain, tree cover, and cloudiness are not related to elevation or temperature
+    + Principal components 1 and 2 explain 75% of variance in the data
+
+
+
+```{r, results = FALSE}
+# explore data
+
+world_env <- read_csv("world_env_vars.csv") %>% 
+  clean_names(case = "upper_camel")
+
+summary(world_env) # check out the dataset
+
+
+```
+
+
+
+```{r, results = FALSE}
+# select variables of interest for principal components analysis
+env_subset <- world_env %>% 
+  select(Elevation, TreeCanopyCover, Isothermality, RainMeanAnnual, TempMeanAnnual, Cloudiness) 
+
+# explore data and understand missingness
+
+VIM::matrixplot(env_subset, sortby = "Elevation")
+# can't see variable names so not that helpful for exploration
+
+naniar::gg_miss_var(env_subset)
+# only a few NAs for each variable in the subset, will remove them
+
+env_nona <- env_subset %>% 
+  drop_na() # remove NA values
+
+
+env_pca <- prcomp(env_nona, scale = TRUE) # run PCA
+
+plot(env_pca)
+biplot(env_pca) # lookin real UGLY! 
+
+
+```
+
+
+
+```{r}
+# a prettier version...
+my_pca_plot <- autoplot(env_pca,
+                        colour = NA,
+                        loadings.colour = "black",
+                        loadings.label = TRUE,
+                        loadings.label.size = 3,
+                        loadings.label.colour = "black",
+                        loadings.label.repel = TRUE)+
+  theme_bw()
+
+my_pca_plot
+
+```
+
+**Figure 2.** Principal components analysis showing the relationship between variables included in a compilation        
+of Google Earth Engine datasets.       
+Data source: @zander_venter.
+
+

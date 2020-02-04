@@ -181,7 +181,6 @@ to help the audience understand and interpret the results.
   
 \CommentTok{# seems like there are a lot more observations in the summer than in the winter so maybe not an interesting thing to use for visualization}
 
-
 \CommentTok{# explore graph}
 \KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hares_mf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ weight, }\DataTypeTok{y =}\NormalTok{ hindft))}\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{()}\OperatorTok{+}
@@ -210,8 +209,6 @@ to help the audience understand and interpret the results.
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Year of Observation"}\NormalTok{,}
        \DataTypeTok{y =} \StringTok{"Observation Count"}\NormalTok{)}\OperatorTok{+}
 \StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.title =} \KeywordTok{element_blank}\NormalTok{())}
-  
-
 
 \NormalTok{hares_hist}
 \end{Highlighting}
@@ -221,9 +218,9 @@ to help the audience understand and interpret the results.
 
 \textbf{Figure 1. Snowshoe Hare Monitoring Observations in the Bonanza
 Creek Experimental Forest Between 1998 - 2012.}\\
-Total number of observations are recorded each year during the
-monitoring period and differentiated by sex.\\
-Data source: Kielland K., F. S. Chapin, R. W. Ruess. 2017.
+Total number of observations of female and male snowshoe hares are
+recorded each year during the monitoring period. Data source: Kielland
+K., F. S. Chapin, R. W. Ruess. 2017.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -245,12 +242,11 @@ Data source: Kielland K., F. S. Chapin, R. W. Ruess. 2017.
     \DataTypeTok{count =} \KeywordTok{length}\NormalTok{(sex), }\CommentTok{# number of observations}
     \DataTypeTok{avg_weight =} \KeywordTok{round}\NormalTok{(}\KeywordTok{mean}\NormalTok{(weight), }\DataTypeTok{digits =} \DecValTok{0}\NormalTok{)) }\CommentTok{# mean weight}
 
-
 \CommentTok{# combine the two tables!}
 \NormalTok{hare_summary <-}\StringTok{ }\KeywordTok{merge}\NormalTok{(hare_summary_f, hare_summary_m, }\DataTypeTok{by =} \StringTok{"year"}\NormalTok{)}
 
 \CommentTok{# format into a single pretty table}
-\NormalTok{hare_table <-}\StringTok{ }\KeywordTok{kable}\NormalTok{(hare_summary, }\DataTypeTok{align =} \StringTok{"c"}\NormalTok{, }\DataTypeTok{col.names =} \KeywordTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{, }\StringTok{"Count"}\NormalTok{, }\StringTok{"Average Weight"}\NormalTok{, }\StringTok{"Count"}\NormalTok{, }\StringTok{"Average Weight"}\NormalTok{), }\DataTypeTok{caption =} \StringTok{"Table 1. Sumamry Statistics for Snowshoe Hare Monitoring Observations at Bonanza Creek Experimental Forest Between 1998 - 2012."}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\NormalTok{hare_table <-}\StringTok{ }\KeywordTok{kable}\NormalTok{(hare_summary, }\DataTypeTok{align =} \StringTok{"c"}\NormalTok{, }\DataTypeTok{col.names =} \KeywordTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{, }\StringTok{"Count"}\NormalTok{, }\StringTok{"Average Weight (g)"}\NormalTok{, }\StringTok{"Count"}\NormalTok{, }\StringTok{"Average Weight (g)"}\NormalTok{), }\DataTypeTok{caption =} \StringTok{"Table 1. Sumamry Statistics for Snowshoe Hare Monitoring Observations at Bonanza Creek Experimental Forest Between 1998 - 2012. Annual observation counts and average weight of female and male snowshoe hares are reported for each of the years during the monitoring period"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{ =}\StringTok{ }\DecValTok{1}\NormalTok{, }\StringTok{"Female"}\NormalTok{ =}\StringTok{ }\DecValTok{2}\NormalTok{, }\StringTok{"Male"}\NormalTok{ =}\StringTok{ }\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{bootstrap_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{), }\DataTypeTok{full_width =} \OtherTok{FALSE}\NormalTok{)}
 
@@ -260,13 +256,13 @@ Data source: Kielland K., F. S. Chapin, R. W. Ruess. 2017.
 
 \begin{table}
 
-\caption{\label{tab:unnamed-chunk-3}Table 1. Sumamry Statistics for Snowshoe Hare Monitoring Observations at Bonanza Creek Experimental Forest Between 1998 - 2012.}
+\caption{\label{tab:unnamed-chunk-3}Table 1. Sumamry Statistics for Snowshoe Hare Monitoring Observations at Bonanza Creek Experimental Forest Between 1998 - 2012. Annual observation counts and average weight of female and male snowshoe hares are reported for each of the years during the monitoring period}
 \centering
 \begin{tabular}[t]{c|c|c|c|c}
 \hline
 \multicolumn{1}{c|}{ } & \multicolumn{2}{c|}{Female} & \multicolumn{2}{c}{Male} \\
 \cline{2-3} \cline{4-5}
-Year & Count & Average Weight & Count & Average Weight\\
+Year & Count & Average Weight (g) & Count & Average Weight (g)\\
 \hline
 1998 & 10 & 1746 & 5 & 1678\\
 \hline
