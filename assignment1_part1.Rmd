@@ -1,5 +1,5 @@
 ---
-title: "Assignment 1, Part 1 - ESM 244"
+title: "Assignment 1 - ESM 244"
 author: "Claire Madden"
 date: "1/26/2020"
 output: html_document
@@ -9,20 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, 
                       warning = FALSE,
                       message = FALSE)
-```
 
-
-### Task 1. 
-
-![Image of a snowshoe Image source: National Geographic](81736.jpg)
-
-Snowshoe hares have been identified as a 'keystone' prey species in northern boreal forests. This study, conducted in the Bonanza Creek Experimental Forest just east of Fairbanks, Alaska, tracks snowshoe hare populations to generate quantitative data that could be used to better explain vegetation and preditor responses to fluctuations in hare populations. Snowshoe hares are known to experience population fluctuations every 8-11 years, as demonstrated by fluctuations in observation counts during the monitoring period. Counts of hare observations declined between 1999 and 2002, and then showed a steady increase from 2002 to 2010 (Figure 1.). 
-
-
-Make sure that both your figure and table appear in your final knitted document, each with a useful caption. **Include text associated with each to help the audience understand and interpret the results.**
-
-
-```{r}
+# load packages
 
 library(tidyverse)
 library(kableExtra)
@@ -31,7 +19,22 @@ library(lubridate)
 library(tidyr)
 library(ggfortify)
 library(RColorBrewer)
+```
 
+
+### Task 1. 
+
+![Image of a sneaky snowshoe hare in Alaska. Image source: National Parks Service (https://www.nps.gov/gaar/learn/nature/snowshoe-hare.htm).](hare1.jpeg)
+
+<br> 
+
+Snowshoe hares have been identified as a 'keystone' prey species in northern boreal forests. This study, conducted in the Bonanza Creek Experimental Forest just east of Fairbanks, Alaska, tracked snowshoe hare populations to generate quantitative data that could be used to better explain and predict vegetation and preditor responses to fluctuations in hare populations. Snowshoe hares are known to experience population fluctuations every 8-11 years. This trend is demonstrated by fluctuations in observation counts during the monitoring period; counts of hare observations declined between 1999 and 2002, and then showed a steady increase from ~2002 to ~2010 (Figure 1, Table 1) (Kielland, Chapin & Ruess, 2017). 
+
+<br>
+
+```{r}
+
+# read in the data 
 hares<- read_csv("showshoe_lter.csv") 
 
 hares_mf <- hares %>% 
@@ -53,22 +56,21 @@ ggplot(data = hares_mf, aes(x = weight, y = hindft))+
 
 # this is not that interesting to me
 
-
 ```
 
 ```{r}
 
 # try something else that may be more interesting
 
-hares_hist <- ggplot(data = hares_mf, aes(x = year))+
+hares_hist <- ggplot(data = hares_mf, aes(x = year))+ # plot observation frequency by sex
   geom_bar(aes(fill = sex), position = "dodge")+
-  scale_fill_manual(values = c("peru", "peachpuff2"), labels = c("Female", "Male"))+
+  scale_fill_manual(values = c("peru", "peachpuff2"), labels = c("Female", "Male"))+ # set colors and legend names
   scale_x_continuous(expand = c(0,0),
-                     breaks = seq(1998, 2012, 1))+
+                     breaks = seq(1998, 2012, 1))+ # scale x axis
   theme_minimal()+
-  labs(x = "Year of Observation",
+  labs(x = "Year of Observation", # set axes labels
        y = "Observation Count")+
-  theme(legend.title = element_blank())
+  theme(legend.title = element_blank()) # remove legend title
 
 hares_hist
 
@@ -76,12 +78,13 @@ hares_hist
 ```
         
 **Figure 1. Snowshoe Hare Monitoring Observations in the Bonanza Creek Experimental Forest Between 1998 - 2012.**        
-Total number of observations of female and male snowshoe hares are recorded each year during the monitoring period. 
-Data source: Kielland K., F. S. Chapin, R. W. Ruess. 2017.
+Total number of observations of female and male snowshoe hares are recorded each year during the monitoring period. Snowshoe hare population fluctuations within the experimental area are demonstrated by the frequency of monitoring observations throughout the 15 year study. Data source: Kielland, Chapin & Ruess, 2017.
 
+<br>
 
+Early in the study period (1998 - 2002) observations of males frequently exceeded observations of females, while later in the study period (2003 - 2012) females were observed more frequently than males in every year. Additionally, overall observations declined early in the study period, increased after 2002, and began to decline again in 2010. This may be demonstrative of a larger known pattern of snowshow hare population fluctuations occuring every 8-11 years (Kielland, Chapin & Ruess, 2017). 
 
-
+<br> 
 ```{r}
 
 # make a summary table for females
@@ -106,7 +109,7 @@ hare_summary_m <- hares_mf %>%
 hare_summary <- merge(hare_summary_f, hare_summary_m, by = "year")
 
 # format into a single pretty table
-hare_table <- kable(hare_summary, align = "c", col.names = c("Year", "Count", "Average Weight (g)", "Count", "Average Weight (g)"), caption = "Table 1. Sumamry Statistics for Snowshoe Hare Monitoring Observations at Bonanza Creek Experimental Forest Between 1998 - 2012. Annual observation counts and average weight of female and male snowshoe hares are reported for each of the years during the monitoring period") %>% 
+hare_table <- kable(hare_summary, align = "c", col.names = c("Year", "Count", "Average Weight (g)", "Count", "Average Weight (g)"), caption = "Table 1. Sumamry Statistics for Snowshoe Hare Monitoring Observations at Bonanza Creek Experimental Forest Between 1998 - 2012. Annual observation counts and average weight of female and male snowshoe hares are reported for each of the years during the monitoring period.") %>% 
   add_header_above(c(" " = 1, "Female" = 2, "Male" = 2)) %>% 
   kable_styling(bootstrap_options = c("striped"), full_width = FALSE)
 
@@ -114,8 +117,11 @@ hare_table
 
 ```
 
+<br> 
 
-Data source: Kielland K., F. S. Chapin, R. W. Ruess. 2017. Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present. Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14. 
+Reference:             
+
+Kielland K., F. S. Chapin, R. W. Ruess. 2017. Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present. Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14. 
 
 
 
